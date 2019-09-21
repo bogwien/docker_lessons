@@ -4,7 +4,9 @@ LABEL author="Bohdan Hvozd"
 LABEL version=1
 
 WORKDIR /usr/share/src
-VOLUME /usr/share/src
+COPY src /usr/share/src
+
+VOLUME /usr/share/src/logs
 
 EXPOSE 8080/tcp
 
