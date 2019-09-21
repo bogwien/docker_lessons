@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  hits:
+    build: .
+    image: "bogwien/hits:h4"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hits.rule=HostRegexp(`{catchall:.*}`)"
+      - "traefik.docker.network=${NETPREFIX:-tmp}_public"
+    depends_on:
+      - redis
+    networks:
+      - public
+      - secret
+  redis:
+    image: redis:alpine
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - redis-data:/data
+    networks:
+      - secret
+  loadbalancer:
+    image: traefik:v2.0
+    labels:
+      - "traefik.enable=false"
+    command: --providers.docker --api --api.insecure=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 8080:8080
+    networks:
+      - public
+volumes:
+  redis-data:
+    driver: local
+networks:
+  secret:
+    driver: bridge
+  public:
+    driver: bridge
