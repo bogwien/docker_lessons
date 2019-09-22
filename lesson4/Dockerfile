@@ -8,7 +8,7 @@ COPY src /usr/share/src
 
 VOLUME /usr/share/src/logs
 
-EXPOSE 8080/tcp
+EXPOSE 5000
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
