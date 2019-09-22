@@ -1,7 +1,9 @@
 version: '3.7'
 services:
   hits:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: bogwien/hits:h4
     labels:
       - traefik.enable=true
@@ -11,7 +13,7 @@ services:
     ports:
       - 5000
     volumes:
-      - ./logs:/usr/share/src/logs
+      - app-volume:/usr/share/src/logs
     depends_on:
       - redis
     networks:
@@ -22,7 +24,8 @@ services:
     labels:
       - traefik.enable=false
     volumes:
-      - redis-data:/data
+      - redis-data:/usr/share/redis
+      - app-volume:/usr/share/src/logs
     networks:
       - secret
   loadbalancer:
@@ -32,6 +35,7 @@ services:
     command: --providers.docker --api --api.insecure=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - app-volume:/usr/share/src/logs
     ports:
       - 80:80
       - 8080:8080
@@ -39,6 +43,8 @@ services:
       - public
 volumes:
   redis-data:
+    driver: local
+  app-volume:
     driver: local
 networks:
   secret:
