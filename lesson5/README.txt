@@ -7,5 +7,5 @@ Docker run:
 
 
 
-docker build -t jat:h5 .
-docker run -it -p 8080:80 jat:h5
+docker build -t bogwien/jat:h5 .
+docker run -it -p 8080:80 bogwien/jat:h5
