@@ -61,11 +61,6 @@ COPY --from=builder ${MAIN_DIR}/build/libs/${MAIN_JAR} ${MAIN_DIR}/build/libs/${
 
 WORKDIR /app
 
-RUN groupadd -r docker && \
-    useradd -r -g docker -d /app -s /sbin/nologin -c "Docker image user" docker && \
-    chown -R docker:docker /app
-USER docker
-
 RUN cp ${MAIN_DIR}/build/libs/${MAIN_JAR} ./
 
 RUN mkdir allure-report
@@ -75,4 +70,4 @@ RUN java -jar ${MAIN_JAR} || echo "Failed tests"
 RUN allure generate -o allure-report allure-result
 
 #Run tests, generate and open report
-ENTRYPOINT allure report open -p 80
+ENTRYPOINT ["allure", "report", "open", "-p", "80"]
